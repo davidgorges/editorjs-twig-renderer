@@ -34,10 +34,9 @@ class Parser
         assert(is_array($data['blocks']));
         $blocks = [];
         foreach ($data['blocks'] as $block) {
-           assert(is_string($data['blocks']['type']));
-           assert(is_array($data['blocks']['data']));
-           $blocks[] = $block;
-
+            assert(is_string($block['type']));
+            assert(is_array($block['data']??[]));
+            $blocks[] = $block;
         }
 
         return $this->renderer->render($blocks);
