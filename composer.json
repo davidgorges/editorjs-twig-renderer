@@ -21,7 +21,6 @@
         "php": ">=7.4",
         "ext-dom": "*",
         "ext-json": "*",
-        "masterminds/html5": "^2.7@dev",
         "twig/twig": "2.* || 3.*"
     },
     "minimum-stability": "dev",
