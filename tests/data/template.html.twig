@@ -1,0 +1,67 @@
+{% block header %}
+    <h{{ level }}>{{ text }}</h{{ level }}>
+{% endblock %}
+
+{% block paragraph %}
+    <p>{{ text }}</p>
+{% endblock %}
+
+{% block list %}
+    {% if style == 'ordered' %}
+        <ol>
+            {% for item in items %}
+                <li>{{ item }}</li>
+            {% endfor %}
+        </ol>
+    {% else %}
+        <ul>
+            {% for item in items %}
+                <li>{{ item }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}
+
+{% block delimiter %}
+    <hr>
+{% endblock %}
+
+{% block code %}
+    <pre>
+        {{ code|raw }}
+    </pre>
+{% endblock %}
+
+{% block link %}
+    <a href="{{ link }}">
+        {{ link }}
+    </a>
+{% endblock %}
+
+{% block embed %}
+    {% if service == 'youtube' %}
+        <iframe height="{{ height }}" src="{{ embed }}"
+                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="true">
+        </iframe>
+    {% elseif service == 'gfycat' or service == 'codepen' %}
+
+        <iframe height="{{ height }}" src="{{ embed }}"
+                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen="true">
+        </iframe>
+    {% endif %}
+{% endblock %}
+
+{% block raw %}
+    {{ raw|raw }}
+{% endblock %}
+
+{% block warning %}
+    <div>
+        <h3>{{ title }}</h3>
+        <div>{{ message }}</div>
+    </div>
+{% endblock %}
+
+{% block simpleImage %}
+    <img src="{{ url }}">
+{% endblock %}

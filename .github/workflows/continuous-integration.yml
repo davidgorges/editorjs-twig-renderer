@@ -1,0 +1,73 @@
+# GitHub Actions Documentation: https://docs.github.com/en/actions
+
+name: "build"
+
+on:
+  push:
+    branches:
+      - "main"
+    tags:
+      - "*"
+  pull_request:
+    branches:
+      - "main"
+
+env:
+  COMPOSER_ROOT_VERSION: "1.99.99"
+
+jobs:
+  static-analysis:
+    name: "Static analysis"
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: "Checkout repository"
+        uses: "actions/checkout@v2"
+
+      - name: "Install PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          php-version: "latest"
+          coverage: "none"
+
+      - name: "Install dependencies (Composer)"
+        uses: "ramsey/composer-install@v2"
+
+      - name: "Statically analyze code (PHPStan)"
+        shell: "bash"
+        run: "vendor/bin/phpstan analyse -c phpstan.neon --level 6 --no-progress --error-format=raw src tests "
+  unit-tests:
+    name: "Unit tests"
+    runs-on: ${{ matrix.operating-system }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version:
+          - "7.4"
+          - "8.0"
+          - "8.1"
+        operating-system:
+          - "ubuntu-latest"
+        dependencies:
+          - "lowest"
+          - "highest"
+
+    steps:
+      - name: "Checkout repository"
+        uses: "actions/checkout@v2"
+
+      - name: "Install PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          php-version: "${{ matrix.php-version }}"
+          coverage: "none"
+
+      - name: "Install dependencies (Composer)"
+        uses: "ramsey/composer-install@v2"
+        with:
+          dependency-versions: "${{ matrix.dependencies }}"
+          composer-options: "${{ matrix.composer-options }}"
+
+      - name: "Run unit tests (PHPUnit)"
+        shell: "bash"
+        run: " vendor/bin/phpunit -v -d memory_limit=-1 --coverage-html build/coverage-report --coverage-clover build/clover.xml --coverage-text"
